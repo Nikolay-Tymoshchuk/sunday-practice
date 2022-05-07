@@ -1,21 +1,21 @@
 {
-  "name": "goit-js-hw-10",
+  "name": "sunday-practice",
   "version": "1.0.0",
-  "description": "home-work-number-9",
+  "description": "stum practice",
   "main": "index.js",
-  "homepage": "https://nikolay-tymoshchuk.github.io/goit-js-hw-10/",
+  "homepage": "https://nikolay-tymoshchuk.github.io/sunday-practice/",
   "scripts": {
     "dev": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /goit-js-hw-10/"
+    "build": "parcel build src/*.html --public-url /sunday-practice/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nikolay-Tymoshchuk/goit-js-hw-10.git"
+    "url": "git+https://github.com/Nikolay-Tymoshchuk/sunday-practice.git"
   },
   "author": "Nikolay Tymoshchuk <saintnikfreak@gmal.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Nikolay-Tymoshchuk/goit-js-hw-10/issues"
+    "url": "https://github.com/Nikolay-Tymoshchuk/sunday-practice/issues"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
