@@ -25,6 +25,7 @@
     "sass": "^1.50.0"
   },
   "dependencies": {
+    "basiclightbox": "^5.0.4",
     "notiflix": "^3.2.5"
   }
 }

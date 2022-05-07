@@ -1,122 +1,107 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-const books = [
-  {
-    id: '1',
-    title: `Apple. Эволюция компьютера`,
-    author: `Владимир Невзоров`,
-    img: `https://bukva.ua/img/products/449/449532_200.jpg`,
-    plot: `Богато иллюстрированный хронологический справочник по истории компьютеров, в котором увлекательно 
-    и в структурированном виде изложена информация о создании и развитии техники Apple на фоне истории 
-    персональных компьютеров в целом.
-    В книге даны описания десятков наиболее значимых моделей устройств как Apple, так и других производителей, 
-    сопровождающиеся большим количеством оригинальных студийных фотографий.
-    Книга предназначена для широкого круга читателей, интересующихся историей электроники. 
-    Она также может послужить источником вдохновения для дизайнеров, маркетологов и предпринимателей.`,
-  },
-  {
-    id: '2',
-    title: `Как объяснить ребенку информатику`,
-    author: `Кэрол Вордерман`,
-    img: `https://bukva.ua/img/products/480/480030_200.jpg`,
-    plot: `Иллюстрированная энциклопедия в формате инфографики о технических, социальных и культурных аспектах 
-    в информатике. Пошагово объясняет, как детям максимально эффективно использовать компьютеры и интернет-сервисы, 
-    оставаясь в безопасности. 
-    Книга рассказывает обо всем: от хранения данных до жизни в интернет-пространстве, 
-    от программирования до компьютерных атак. О том, как компьютеры функционируют, о современном программном 
-    обеспечении, устройстве Интернета и цифровом этикете. Все концепты - от хакера до биткоина - 
-    объясняются наглядно с помощью иллюстраций и схем.`,
-  },
-  {
-    id: '3',
-    title: `Путь скрам-мастера. #ScrumMasterWay`,
-    author: `Зузана Шохова`,
-    img: `https://bukva.ua/img/products/480/480090_200.jpg`,
-    plot: `Эта книга поможет вам стать выдающимся скрам-мастером и добиться отличных результатов с вашей командой. 
-    Она иллюстрированная и легкая для восприятия - вы сможете прочитать ее за выходные, а пользоваться полученными 
-    знаниями будете в течение всей карьеры.
-    Основываясь на 15-летнем опыте, Зузана Шохова рассказывает, какие роли и обязанности есть у скрам-мастера, 
-    как ему решать повседневные задачи, какие компетенции нужны, чтобы стать выдающимся скрам-мастером, 
-    какими инструментами ему нужно пользоваться.`,
-  },
-];
+import * as basicLightbox from 'basiclightbox';
+import 'basiclightbox/dist/basicLightbox.min.css';
+import booksObj from './js/book-example';
+import PreviewTpl from './templates/preview.hbs';
+import ListTpl from './templates/list.hbs';
+import FormTpl from './templates/form.hbs';
 const divRef = document.body.querySelector('#root');
+const KEY = 'books';
 
+
+// Инициализируем две зоны экрана, для списка книг и отображения книг
 const newDiv1 = document.createElement('div');
-const newDiv2 = document.createElement('div');
-
 newDiv1.classList.add('leftdiv');
+const newDiv2 = document.createElement('div');
 newDiv2.classList.add('rightdiv');
+// ===================================================================
 
-divRef.append(newDiv1, newDiv2);
-
+// Создаем DOM узлы для левого блока
 const heading = document.createElement('h1');
-const newList = document.createElement('ul');
-const addBtn = document.createElement('button');
-
-heading.textContent = 'Online library';
-addBtn.textContent = 'Add';
-
 heading.classList.add('title');
-addBtn.classList.add('leftdiv__button');
+heading.textContent = 'Online library';
+const newList = document.createElement('ul');
 newList.classList.add('leftdiv__list');
+const addBtn = document.createElement('button');
+addBtn.classList.add('leftdiv__button');
+addBtn.textContent = 'Add';
+// ===================================================================
 
+//Выводим созданные узлы в интерфейс
 newDiv1.append(heading, newList, addBtn);
+divRef.append(newDiv1, newDiv2);
+// ===================================================================
 
-function renderList(obj) {
-  const markup = newList.insertAdjacentHTML(
-    'beforeend',
-    obj
-      .map(
-        ({ title }) => `<li class="leftdiv__list-item">
-  <p class="booktitle">${title}</p>
-<div class="leftdiv__list-item-buttons">
- <button class="list-item__button btndel" type="button">Delete</button>
-  <button class="list-item__button btned" type="button">Edit</button></div>
-  </li>`,
-      )
-      .join(''),
-  );
+// Создаем функции для истановки и получения данных из WEB хранилища
+const setLocalStorage = (obj) => localStorage.setItem(KEY, JSON.stringify(obj));
+const getLocalStorage = () => JSON.parse(localStorage.getItem(KEY));
+// ===================================================================
+
+
+// Создаем функцию для отрисовки списка книг
+const renderList = (obj) => newList.insertAdjacentHTML('beforeend', obj.map(ListTpl).join(''));
+// ===================================================================
+
+// Записываем данные в локальное хранилище
+setLocalStorage(booksObj);
+// ===================================================================
+
+// Отрисовываем список книг
+renderList(getLocalStorage());
+// ===================================================================
+
+// Создаем обработчик кликов на элементы списка книг
+newList.addEventListener('click', onClickByListElement);
+// ===================================================================
+
+// Создаем функцию для обработки кликов на список в зависимости от элемента, на котором произошел клик
+function onClickByListElement(event) {
+  // Обрабатываем клик по названию книги
+  if (event.target.classList.contains('booktitle')) {
+    onClickByTitle(event);
+  }
+  // Обрабатываем клик по кнопке удаления книги
+  else if (event.target.classList.contains('btndel')) {
+    onClickDel(event);
+  }
+    // Обрабатываем клик по кнопке изменения книги
+  else if (event.target.classList.contains('btnedit')) {
+    onClickEdit(event);
+  }
 }
 
-renderList(books);
-
-const pRef = document.body.querySelectorAll('.booktitle');
-
-pRef.forEach(item => item.addEventListener('click', onClickTitle));
-
-function onClickTitle(event) {
-  const book = books.find(item => item.title === event.target.textContent);
+// Функция поиска и рендара в правом блоке превью книги по клику на ее название
+function onClickByTitle(event) {
+  const book = getLocalStorage().find(item => item.title === event.target.textContent);
   newDiv2.innerHTML = '';
   createPrewiewMarkup(book);
 }
+// ==================================================================
 
+// Создаем функцию для отрисовки превью книги в правом блоке просмотра
 function createPrewiewMarkup(obj) {
-  const { title, author, img, plot } = obj;
-  const markup = newDiv2.insertAdjacentHTML(
-    'beforeend',
-    `<div class="rightdiv__book">
-    <img class="rightdiv__book-img" src="${img}" alt="book">
-    <div class="rightdiv__book-info">
-    <h2 class="rightdiv__book-title">${title}</h2>
-    <p class="rightdiv__book-author">${author}</p>
-    <p class="rightdiv__book-plot">${plot}</p>
-    </div>
-    </div>`,
-  );
+  if (!obj.img) { obj.img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Book.svg/1200px-Book.svg.png' }
+  newDiv2.insertAdjacentHTML('beforeend', PreviewTpl(obj));
 }
+// ===================================================================
 
-const btnDelEl = document.body.querySelectorAll('.btndel');
-const btnEditEl = document.body.querySelectorAll('.btned');
 
-btnDelEl.forEach(item => item.addEventListener('click', onClickDel));
-// btnEditEl.forEach(item => item.addEventListener('click', onClickEdit));
-
+// Функция удаления книги. Находим=> Удаляем=> Очищаем список => Отрисовываем новый с учетом изменений
 function onClickDel(event) {
-  const p = event.target.parentElement.previousElementSibling.textContent;
-  const book = books.find(item => item.title === p);
-  //   books.splice(books.indexOf(book), 1);
-  //   newList.innerHTML = '';
-  //   renderList(books);
-  //   console.log('books :>> ', books);
-  console.log('event :>> ', event);
+  const idOfTargetedBook = event.target.closest('li').id;
+  const targetedBookFromStorage = getLocalStorage().filter(item => item.id !== idOfTargetedBook);
+  setLocalStorage(targetedBookFromStorage);
+  newList.innerHTML = '';
+  renderList(getLocalStorage());
 }
+// ==================================================================
+
+// Функция удаления добавления книги при еажении на кнопку "Add"
+addBtn.addEventListener('click', onClickAdd);
+
+function onClickAdd(event) {
+
+  console.log('event :>> ', event);
+  basicLightbox.create(FormTpl()).show();
+}
+// ==================================================================
