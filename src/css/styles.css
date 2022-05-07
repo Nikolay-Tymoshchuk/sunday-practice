@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa;
+  color: #212121;
+  line-height: 1.5;
+}
+
+button {
+  display: inline-block;
+  margin: 0;
+  padding: auto;
+}
+
+#root {
+  display: flex;
+  min-width: 90vw;
+  min-height: 100vh;
+}
+
+.leftdiv {
+  padding: 0.5rem;
+  width: 40%;
+  background-image: linear-gradient(to bottom, #00BFFF, #fff);
+}
+
+.rightdiv {
+  width: 60%;
+  background-image: linear-gradient(to bottom, #f9d71c, #fff);
+  padding: 0.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.leftdiv__button {
+  display: inline-block;
+  background-color: #f9d71c;
+  border: 1px solid #212121;
+  border-radius: 5px;
+  color: #212121;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  width: 50%;
+  padding: 0.5rem;
+}
+
+.leftdiv__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.leftdiv__list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  color: #212121;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  padding-right: 0.5rem;
+  text-align: center;
+  width: 90%;
+}
+
+.leftdiv__list-item:nth-child(even) {
+  color: #f9d71c;
+}
+
+.list-item__button {
+  display: inline-block;
+  background-color: transparent;
+  border: 0.5px solid #212121;
+  border-radius: 5px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  min-width: 40%;
+  padding: 0.5rem;
+}
+
+.booktitle {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:hover {
+  filter:invert(1);
+}
