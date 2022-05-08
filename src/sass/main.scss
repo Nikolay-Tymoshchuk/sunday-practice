@@ -48,7 +48,7 @@ button {
     padding: 0;
 }
 
-.leftdiv__button {
+.button {
     display: inline-block;
     background-color: rgb(44, 151, 187);
     border: 1px solid #212121;
@@ -145,7 +145,57 @@ button {
 }
 
 .book-form {
+    border-radius: 10px;
+    padding: 24px;
+    background-color: #fafafa;
+    width: 300px;
     display: flex;
     flex-direction: column;
     justify-content: stretch;
+
+    &>*:not(:last-child) {
+        margin-bottom: 24px;
+    }
+
+    &>:last-child{
+        text-align: center;
+    }
 }
+
+.label-box {
+    position: relative;
+    color: #000;
+
+    & label {
+        position: absolute;
+        left: 5px;
+        transform: translateY(25%);
+        transition: transform 0.3s ease-in-out;
+        
+    }
+
+    & input {
+        position: inherit;
+        z-index: 2;
+        width: 100%;
+        height: 30px;
+        &:focus {
+            border: 2px solid #555;
+            background-color: lightblue;
+        }
+
+        &:focus + label {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+    }
+}
+
+h2 {
+    display: inline-block;
+    font-size: 1rem;
+    text-align: center;
+    color: #000;
+    margin-top: 0;
+}
+

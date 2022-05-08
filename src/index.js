@@ -23,7 +23,7 @@ heading.textContent = 'Online library';
 const newList = document.createElement('ul');
 newList.classList.add('leftdiv__list');
 const addBtn = document.createElement('button');
-addBtn.classList.add('leftdiv__button');
+addBtn.classList.add('button');
 addBtn.textContent = 'Add';
 // ===================================================================
 
@@ -100,8 +100,9 @@ function onClickDel(event) {
 addBtn.addEventListener('click', onClickAdd);
 
 function onClickAdd(event) {
-
-  console.log('event :>> ', event);
   basicLightbox.create(FormTpl()).show();
+
+  const formData = new FormData(document.forms.addBook);
+  console.log('formData :>> ', formData);
 }
 // ==================================================================
