@@ -5,6 +5,7 @@ import booksObj from './js/book-example';
 import PreviewTpl from './templates/preview.hbs';
 import ListTpl from './templates/list.hbs';
 import FormTpl from './templates/form.hbs';
+import throttle from 'lodash.throttle';
 const divRef = document.body.querySelector('#root');
 const KEY = 'books';
 
@@ -100,9 +101,67 @@ function onClickDel(event) {
 addBtn.addEventListener('click', onClickAdd);
 
 function onClickAdd(event) {
+
+  // создаем модальное окно
   basicLightbox.create(FormTpl()).show();
 
-  const formData = new FormData(document.forms.addBook);
-  console.log('formData :>> ', formData);
+  const form = document.querySelector('.book-form');
+  const formInputs = form.querySelectorAll('input');
+
+  // Проверяем, есть ли книга с данными, которые мы вводили, но не сохранили
+  localStorageTplCheck(formInputs);
+
+  // Добавляем слушателей на инпуты и кнопку сохранения
+  form.addEventListener('input', throttle(onInputChange, 250));
+
+  const saveBtn = document.body.querySelector('.btn-save');
+  saveBtn.addEventListener('click', onClickSave);
 }
 // ==================================================================
+
+function onClickSave(e) {
+  e.preventDefault();
+
+
+  const newBook = {};
+  const formEl = document.querySelector('.book-form');
+  const formData = new FormData(formEl);
+
+  formData.forEach((value, key) => newBook[key] = value);
+  newBook.id = Date.now().toString();
+  if (!newBook.img) { newBook.img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Book.svg/1200px-Book.svg.png'}
+  if (Object.values(newBook).some(item => item === '')) {
+    Notify.failure('All fields must be filled');
+    return
+  }
+  else {
+    setLocalStorage([...getLocalStorage(), newBook]);
+  }
+
+  localStorage.removeItem('TemporaryObject');
+  formEl.reset();
+  newList.innerHTML = '';
+  renderList(getLocalStorage());
+  Notify.success('Book added', {position: 'center-top'});
+}
+
+function onInputChange(e) {
+  const input = e.target;
+  if (input === e.currentTarget) return;
+
+  const objectTpl = {};
+  const formData = new FormData(e.currentTarget);
+  formData.forEach((value, key) => objectTpl[key] = value);
+
+  localStorage.setItem('TemporaryObject', JSON.stringify(objectTpl));
+}
+
+function localStorageTplCheck(arr) {
+  const tplParsed = JSON.parse(localStorage.getItem('TemporaryObject'));
+  
+  if (!localStorage.TemporaryObject) return;
+  
+  Object.entries(tplParsed).forEach(([key, value]) => {
+    arr.forEach(input => { if (input.name === key) input.value = value; });
+  });  
+}
