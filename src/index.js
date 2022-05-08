@@ -119,31 +119,40 @@ function onClickAdd(event) {
 }
 // ==================================================================
 
+// Функция-обработчик кнопки сохранения.
 function onClickSave(e) {
   e.preventDefault();
 
-
+// Создаем новую книгу(по умолчанию пустой объект)
   const newBook = {};
+// Достаем данные из формы
   const formEl = document.querySelector('.book-form');
   const formData = new FormData(formEl);
-
+// Присваиваем новой книге ключи и из значения из полей формы
   formData.forEach((value, key) => newBook[key] = value);
+  // Добавляем ID новой книге
   newBook.id = Date.now().toString();
-  if (!newBook.img) { newBook.img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Book.svg/1200px-Book.svg.png'}
+
+  // Если в поле воода не введен url картинки, то устанавиливаем его по умолчанию
+  if (!newBook.img) { newBook.img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Book.svg/1200px-Book.svg.png' }
+  // Проверяем на заплненность полей(img url не обязательное поле)
   if (Object.values(newBook).some(item => item === '')) {
     Notify.failure('All fields must be filled');
     return
   }
+  // Если все поля заполнены, то сохраняем новую книгу в localStorage, перезаписывая в нем данные
   else {
     setLocalStorage([...getLocalStorage(), newBook]);
   }
 
+  // Очищаем ненужную информацию, перерисовываем список и выводим уведомление об успешном сохранении
   localStorage.removeItem('TemporaryObject');
   formEl.reset();
   newList.innerHTML = '';
   renderList(getLocalStorage());
   Notify.success('Book added', {position: 'center-top'});
 }
+// ==================================================================
 
 function onInputChange(e) {
   const input = e.target;
