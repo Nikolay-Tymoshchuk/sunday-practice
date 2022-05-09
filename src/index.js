@@ -96,7 +96,6 @@ function onClickDel(event) {
   newList.innerHTML = '';
   rightDiv.innerHTML = '';
   renderList(getLocalStorage());
-
   Notify.success('The book was successfully deleted', {position: 'center-top'});
 }
 // ==================================================================
