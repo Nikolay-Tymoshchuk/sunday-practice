@@ -91,10 +91,13 @@ function createPrewiewMarkup(obj) {
 // Функция удаления книги. Находим=> Удаляем=> Очищаем список => Отрисовываем новый с учетом изменений
 function onClickDel(event) {
   const idOfTargetedBook = event.target.closest('li').id;
-  const targetedBookFromStorage = getLocalStorage().filter(item => item.id !== idOfTargetedBook);
-  setLocalStorage(targetedBookFromStorage);
+  const booksCollectionWithoutDeleted = getLocalStorage().filter(item => item.id !== idOfTargetedBook);
+  setLocalStorage(booksCollectionWithoutDeleted);
   newList.innerHTML = '';
+  rightDiv.innerHTML = '';
   renderList(getLocalStorage());
+
+  Notify.success('The book was successfully deleted', {position: 'center-top'});
 }
 // ==================================================================
 
