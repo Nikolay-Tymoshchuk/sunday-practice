@@ -84,6 +84,7 @@ button {
 
     &:hover {
         background-color: transparent;
+        transition: all 250ms ease-in-out;
     }
 }
 
@@ -106,6 +107,18 @@ button {
     width: 95%;
     border-bottom: 1px dashed #212121;
     margin-bottom: 20px;
+
+    & p {
+            position: relative;
+            transition: all 250ms ease-in-out;
+    
+            &:hover {
+                cursor: pointer;
+                filter: drop-shadow(4px 6px 4px rgba(32, 32, 32, 0.7));
+                transform: perspective(400px) rotateX(45deg);
+                transition: all 250ms ease-in-out;
+            }
+        }
 }
 
 .list-item__button {
@@ -126,21 +139,23 @@ button {
 
     &.btndel {
         background-color: #fa8077bb;
+        transition: all 250ms ease-in-out;
 
         &:hover {
             background-color: transparent;
-            color: #fa8077bb;
             border-color: #fa8077bb;
+            transition: all 250ms ease-in-out;
         }
     }
 
     &.btnedit {
         background-color: #00e43188;
+        transition: all 250ms ease-in-out;
 
         &:hover {
             background-color: transparent;
-            color: #00e43188;
             border-color: #00e43188;
+            transition: all 250ms ease-in-out;
         }
     }
 }
@@ -148,6 +163,7 @@ button {
 .rightdiv__book-img {
     max-width: 30%;
     height: auto;
+    transition: all 250ms ease-in-out;
 
     &:hover {
         transform: scale(1.02);
