@@ -15,7 +15,25 @@ body {
     color: #212121;
     line-height: 1.5;
     padding: 0;
-    background-image: linear-gradient(to right, #00BFFF50 38%, #f9d81c50 40%, #f9d81c50 100%);
+    background-image: linear-gradient(235deg, #d8a303 0%, #ffc107 10%, #fafafa99 27%, #ffffff00 50%, #ffffff00 100%),    
+    linear-gradient(to right,
+    #ffffff00, 0%,
+    #ffffff00, 34%,
+    #00BFFF88 34%,
+    #FFD70088 43%,
+    #ffffff00 43%,
+    #ffffff00 100%),
+            linear-gradient(to right, 
+    #35aeff84 0%,
+    #20c7ff6c 15%,
+    #00BFFF 34%, 
+    #87c0d2 37%,
+    #82c0d3 38%,
+    #ffffff 39%,
+    #7b7b68 40%,
+    #FFD700 43%,
+    #FFD70090 65%,
+    #f9d81c 100%)
 }
 
 button {    
@@ -40,6 +58,7 @@ button {
     display: flex;
     width: 60%;
     padding: 0.5rem;
+    padding-left: 1rem;
 }
 
 .title {
