@@ -11,10 +11,10 @@ const KEY = 'books';
 
 
 // Инициализируем две зоны экрана, для списка книг и отображения книг
-const newDiv1 = document.createElement('div');
-newDiv1.classList.add('leftdiv');
-const newDiv2 = document.createElement('div');
-newDiv2.classList.add('rightdiv');
+const leftDiv = document.createElement('div');
+leftDiv.classList.add('leftdiv');
+const rightDiv = document.createElement('div');
+rightDiv.classList.add('rightdiv');
 // ===================================================================
 
 // Создаем DOM узлы для левого блока
@@ -29,8 +29,8 @@ addBtn.textContent = 'Add';
 // ===================================================================
 
 //Выводим созданные узлы в интерфейс
-newDiv1.append(heading, newList, addBtn);
-divRef.append(newDiv1, newDiv2);
+leftDiv.append(heading, newList, addBtn);
+divRef.append(leftDiv, rightDiv);
 // ===================================================================
 
 // Создаем функции для истановки и получения данных из WEB хранилища
@@ -69,12 +69,13 @@ function onClickByListElement(event) {
   else if (event.target.classList.contains('btnedit')) {
     onClickEdit(event);
   }
+  return
 }
 
 // Функция поиска и рендара в правом блоке превью книги по клику на ее название
 function onClickByTitle(event) {
   const book = getLocalStorage().find(item => item.title === event.target.textContent);
-  newDiv2.innerHTML = '';
+  rightDiv.innerHTML = '';
   createPrewiewMarkup(book);
 }
 // ==================================================================
@@ -82,7 +83,7 @@ function onClickByTitle(event) {
 // Создаем функцию для отрисовки превью книги в правом блоке просмотра
 function createPrewiewMarkup(obj) {
   if (!obj.img) { obj.img = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Book.svg/1200px-Book.svg.png' }
-  newDiv2.insertAdjacentHTML('beforeend', PreviewTpl(obj));
+  rightDiv.insertAdjacentHTML('beforeend', PreviewTpl(obj));
 }
 // ===================================================================
 
@@ -97,7 +98,7 @@ function onClickDel(event) {
 }
 // ==================================================================
 
-// Функция удаления добавления книги при еажении на кнопку "Add"
+// Функция добавления книги при еажении на кнопку "Add"
 addBtn.addEventListener('click', onClickAdd);
 
 function onClickAdd(event) {
@@ -106,7 +107,7 @@ function onClickAdd(event) {
   basicLightbox.create(FormTpl()).show();
 
   const form = document.querySelector('.book-form');
-  const formInputs = form.querySelectorAll('input');
+  const formInputs = form.querySelectorAll('[name]');
 
   // Проверяем, есть ли книга с данными, которые мы вводили, но не сохранили
   localStorageTplCheck(formInputs);
@@ -154,17 +155,22 @@ function onClickSave(e) {
 }
 // ==================================================================
 
+// Функция, записывающая в localStorage вводимые в импут данные, чтоб при случайном закрытии формы не потерять их
 function onInputChange(e) {
   const input = e.target;
   if (input === e.currentTarget) return;
 
+// создаем временный объект, куда будем записывать вводимые данные и присваиваем ему коючи и значения из инпутов
   const objectTpl = {};
-  const formData = new FormData(e.currentTarget);
+  const formData = new FormData(document.querySelector('.book-form'));
   formData.forEach((value, key) => objectTpl[key] = value);
 
+// Записываем временный объект в localStorage 
   localStorage.setItem('TemporaryObject', JSON.stringify(objectTpl));
 }
+// ==================================================================
 
+// Функция, проверяющая наличие в localStorage введенных данных, и если есть, то заполняет ими инпуты
 function localStorageTplCheck(arr) {
   const tplParsed = JSON.parse(localStorage.getItem('TemporaryObject'));
   
@@ -174,3 +180,52 @@ function localStorageTplCheck(arr) {
     arr.forEach(input => { if (input.name === key) input.value = value; });
   });  
 }
+// ==================================================================
+
+function onClickEdit(event) {
+  const idOfTargetedBook = event.target.closest('li').id;
+  const targetedBookFromStorage = getLocalStorage().find(item => item.id === idOfTargetedBook);
+  console.log('Show targetedBookFromStorage', targetedBookFromStorage);
+  rightDiv.innerHTML = '';
+  createPrewiewMarkup(targetedBookFromStorage);
+  rightDiv.insertAdjacentHTML('afterbegin', FormTpl(targetedBookFromStorage));
+  const form = document.querySelector('.book-form');
+  const formTitle = form.firstElementChild;
+  formTitle.textContent = 'Edit book';
+  form.style.backgroundColor = 'transparent';
+
+  const inputs = form.querySelectorAll('[name]');
+  Object.entries(targetedBookFromStorage).forEach(([key, value]) => {
+    inputs.forEach(input => { if (input.name === key) input.value = value; });
+  });
+  form.addEventListener('change', onChangeInInput);
+  form.addEventListener('submit', onSubmitForm);
+
+  function onChangeInInput(e) {
+    const input = e.target;
+    if (input === e.currentTarget) return;
+    targetedBookFromStorage[input.name] = input.value;
+    rightDiv.lastElementChild.innerHTML = '';
+    createPrewiewMarkup(targetedBookFromStorage);
+    const listTpl = getLocalStorage().filter(item => item.id !== idOfTargetedBook);
+    listTpl.push(targetedBookFromStorage);
+    console.log('object :>> ', listTpl);
+    console.log('Show targetedBookFromStorage', targetedBookFromStorage); 
+    setLocalStorage(listTpl);
+  }
+
+  function onSubmitForm(e) {
+    e.preventDefault();   
+    
+    const formData = new FormData(form);
+    formData.forEach((value, key) => targetedBookFromStorage[key] = value);
+    const listTpl = getLocalStorage().filter(item => item.id !== idOfTargetedBook);
+    listTpl.push(targetedBookFromStorage);
+    setLocalStorage(listTpl.sort((a, b) => a.id - b.id));
+    rightDiv.innerHTML = '';
+    newList.innerHTML = '';
+    createPrewiewMarkup(targetedBookFromStorage);
+    renderList(getLocalStorage());
+  }
+}
+
