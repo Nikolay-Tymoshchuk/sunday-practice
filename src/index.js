@@ -226,6 +226,7 @@ function onClickEdit(event) {
     newList.innerHTML = '';
     createPrewiewMarkup(targetedBookFromStorage);
     renderList(getLocalStorage());
+    Notify.success('Data was changed successfully', {position: 'center-top'});
   }
 }
 
