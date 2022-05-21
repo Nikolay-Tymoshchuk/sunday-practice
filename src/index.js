@@ -44,7 +44,10 @@ const renderList = (obj) => newList.insertAdjacentHTML('beforeend', obj.map(List
 // ===================================================================
 
 // Записываем данные в локальное хранилище
-setLocalStorage(booksObj);
+if (!localStorage.getItem(KEY) || JSON.parse(localStorage.getItem(KEY)).length===0) {
+  setLocalStorage(booksObj);
+}
+console.log('object :>> ', localStorage.getItem(KEY));
 // ===================================================================
 
 // Отрисовываем список книг
